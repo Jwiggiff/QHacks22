@@ -1,0 +1,53 @@
+@use "../variables" as *;
+
+.room {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 80px 1fr max-content;
+
+  .roomHeader {
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $background;
+    border-bottom: 4px solid $primary;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    font-size: 1.5em;
+    font-weight: bold;
+
+    a,
+    img {
+      height: 100%;
+    }
+  }
+
+  .transcript {
+    background-color: $background;
+    max-height: 100%;
+    overflow-y: auto;
+
+    @include media-query($on-desktop) {
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+      margin: 2rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0 1em;
+
+      li {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+
+        .time {
+          font-size: 0.75em;
+          padding-right: 1rem;
+          border-right: 2px solid $accent;
+        }
+      }
+    }
+  }
+}

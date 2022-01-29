@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  img.logo {
+    max-width: 15em;
+  }
+
+  p {
+    font-style: italic;
+  }
+}
