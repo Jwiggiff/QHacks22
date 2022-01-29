@@ -4,7 +4,7 @@ function Header() {
   return (
     <div className="header">
       <img className="logo" src={logo} alt="Iris" />
-      <p>Translate on the go!&trade;</p>
+      <p>Bridging Language Barriers&trade;</p>
     </div>
   );
 }
