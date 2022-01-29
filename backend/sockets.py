@@ -1,12 +1,15 @@
 import asyncio
 import websockets
-from transcribe_text import send_recieve
+import json
+from transcribe_text import send_receive
+
 async def handler(websocket):
     while True:
         message = await websocket.recv()
+        message = json.loads(message)
         print(message)
-        if message.type == 'recording':
-            send_result, receive_result = await send_recieve()
+        if message['type'] == 'recording':
+            send_result, receive_result = await send_receive(message['audio'])
 
 async def main():
     async with websockets.serve(handler, "", 8001):

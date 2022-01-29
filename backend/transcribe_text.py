@@ -10,7 +10,7 @@ load_dotenv()
 URL = "wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000"
 
 # sends and receives webhook to display sound in terminal
-async def send_receive():
+async def send_receive(audio):
    print(f'Connecting websocket to url ${URL}')
    async with websockets.connect(
        URL,
@@ -49,10 +49,12 @@ async def send_receive():
                    break
                except Exception as e:
                    assert False, "Not a websocket 4008 error"
-       send_result, receive_result = await asyncio.gather(send(), receive())
-       return send_result, receive_result
+    #    send_result, receive_result = await asyncio.gather(send(), receive())
+    #    return send_result, receive_result
+       return await asyncio.gather(send(audio), receive())
+
 # calls the send_recieve function
-asyncio.get_event_loop().run_until_complete(send_receive())
+asyncio.get_event_loop().run_until_complete(send_receive("W29iamVjdCBCbG9iXQ=="))
 # currently; websockets allow continuous connection between myself and the server
 # what we want: websocket that connects between the front and the back-end; ensure that you can pick up audio (from English to other languages)
 # https://websockets.readthedocs.io/en/stable/
