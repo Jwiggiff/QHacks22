@@ -7,7 +7,7 @@ async def handler(websocket):
     while True:
         message = await websocket.recv()
         message = json.loads(message)
-        print(message)
+        # print(message)
         if message['type'] == 'recording':
             send_result, receive_result = await send_receive(message['audio'])
 

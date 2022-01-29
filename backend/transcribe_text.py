@@ -1,3 +1,4 @@
+import base64
 import websockets
 import asyncio
 import json
@@ -25,8 +26,8 @@ async def send_receive(audio):
        print("Sending messages ...")
        async def send(audio):
                try:
-                   data = audio.decode("utf-8")
-                   json_data = json.dumps({"audio_data": str(data)})
+                #    data = base64.b64encode(audio).decode("utf-8")
+                   json_data = json.dumps({"audio_data": str(audio)})
                    run = await _ws.send(json_data)
                except websockets.exceptions.ConnectionClosedError as e:
                    print(e)
@@ -54,7 +55,7 @@ async def send_receive(audio):
        return await asyncio.gather(send(audio), receive())
 
 # calls the send_recieve function
-asyncio.get_event_loop().run_until_complete(send_receive("W29iamVjdCBCbG9iXQ=="))
+# asyncio.get_event_loop().run_until_complete(send_receive())
 # currently; websockets allow continuous connection between myself and the server
 # what we want: websocket that connects between the front and the back-end; ensure that you can pick up audio (from English to other languages)
 # https://websockets.readthedocs.io/en/stable/
