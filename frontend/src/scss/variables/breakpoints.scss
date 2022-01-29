@@ -1,0 +1,7 @@
+$on-desktop: 800px;
+
+@mixin media-query($device) {
+  @media only screen and (min-width: $device) {
+    @content;
+  }
+}
