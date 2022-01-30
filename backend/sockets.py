@@ -1,4 +1,7 @@
 import asyncio
+from os import environ
+import os
+import signal
 import websockets
 import json
 import secrets
@@ -86,9 +89,13 @@ async def main():
     Parameters: None
     Return: None
     """
-    async with websockets.serve(handler, "", 8001):
-        # runs forever
-        await asyncio.Future() 
+    loop = asyncio.get_running_loop()
+    stop = loop.create_future()
+    signal.signal(signal.SIGTERM, stop.set_result)
+    # loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+
+    async with websockets.serve(handler, "", int(os.environ.get("PORT", "8001"))):
+        await stop
 
 if __name__ == "__main__":
     asyncio.run(main()) 
