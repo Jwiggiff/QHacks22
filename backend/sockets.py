@@ -1,7 +1,7 @@
 import asyncio
 import websockets
 import json
-from transcribe_text import transcribe_a
+from transcribe_text import transcribe
 
 async def handler(websocket):
     while True:
@@ -10,8 +10,8 @@ async def handler(websocket):
         # print(message)
         if message['type'] == 'recording':
             print("recording received")
-            text = transcribe_a(message['audio'])
-            print(text)
+            text = transcribe(message['audio'])
+            await websocket.send(json.dumps({"type": "transcription", "message": text}))
 
 async def main():
     async with websockets.serve(handler, "", 8001):
