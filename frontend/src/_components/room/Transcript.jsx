@@ -7,7 +7,8 @@ function Transcript(props) {
   let [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8001");
+    // const ws = new WebSocket("ws://localhost:8001");
+    const ws = new WebSocket("ws://iris-translate-back.herokuapp.com/");
 
     ws.onopen = () => {
       // Join room
