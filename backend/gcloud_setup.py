@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-#get api keys
+# get api keys
 creds_json = base64.b64decode(os.getenv("GOOGLE_CREDENTIALS")).decode("utf-8");
 creds_json = json.loads(creds_json);
 credentials = service_account.Credentials.from_service_account_info(creds_json)
