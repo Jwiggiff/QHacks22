@@ -1,15 +1,42 @@
+import { useEffect, useState } from "react";
+import Loader from "./Loader";
 import Message from "./Message";
 
-function Transcript() {
-  let message =
-    "Minim deserunt quis dolor anim nisi est in ea eiusmod laborum in excepteur adipisicing. Proident deserunt cillum deserunt nulla. Ea est sunt duis eiusmod sint ex ad amet sint pariatur qui officia elit. Nostrud irure velit consectetur minim minim magna consectetur non.";
+function Transcript(props) {
+  let [transcriptions, setTranscriptions] = useState([]);
+  let [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8001");
+
+    ws.onopen = () => {
+      // Join room
+      ws.send(JSON.stringify({ type: "join_room", id: props.roomId }));
+    };
+
+    ws.onmessage = (message) => {
+      console.log("Socket: ", JSON.parse(message.data));
+      let msg = JSON.parse(message.data);
+      if (msg.type == "transcription") {
+        setLoading(false);
+        setTranscriptions(
+          transcriptions.concat({ text: msg.message, time: msg.time })
+        );
+      } else if (msg.type == "loading") setLoading(true);
+    };
+  });
 
   return (
     <div className="transcript">
       <ul>
-        {Array.apply(null, Array(10)).map((_, i) => (
-          <Message key={i} time={new Date()} message={message} />
+        {transcriptions.map((transcription, i) => (
+          <Message
+            key={i}
+            time={transcription.time}
+            message={transcription.text}
+          />
         ))}
+        {loading ? <Loader /> : null}
       </ul>
     </div>
   );

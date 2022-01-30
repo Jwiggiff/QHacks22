@@ -1,17 +1,22 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import RoomHeader from "../_components/room/Header";
 import Host from "../_components/room/Host";
 import Transcript from "../_components/room/Transcript";
 
 function Room() {
   let params = useParams();
+  let [searchParams, setSearchParams] = useSearchParams();
 
-  let host = true;
+  let host = searchParams.has("host");
 
   return (
     <div className="room">
       <RoomHeader roomId={params.roomId} />
-      {host ? <Host /> : <Transcript />}
+      {host ? (
+        <Host roomId={params.roomId} />
+      ) : (
+        <Transcript roomId={params.roomId} />
+      )}
     </div>
   );
 }

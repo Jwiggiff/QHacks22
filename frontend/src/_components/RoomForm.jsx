@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 function RoomForm() {
   let navigate = useNavigate();
@@ -6,10 +7,11 @@ function RoomForm() {
   function createRoom(e) {
     e.preventDefault();
 
-    //TODO: Create room in database
+    // Generate random room code
+    let roomCode = uuidv4();
 
     // Navigate to new room
-    navigate("/room/xxx");
+    navigate(`/room/${roomCode}?host`);
   }
 
   function joinRoom(e) {
@@ -28,6 +30,9 @@ function RoomForm() {
       <div className="seperator">Or</div>
       <form onSubmit={joinRoom} id="joinForm">
         <input type="text" name="code" placeholder="Room Code" />
+        {/* <select name="lang">
+          <option value=""></option>
+        </select> */}
         <button>Join Room</button>
       </form>
     </div>

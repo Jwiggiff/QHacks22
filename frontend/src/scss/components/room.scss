@@ -26,6 +26,9 @@
     background-color: $background;
     max-height: 100%;
     overflow-y: auto;
+    
+    display: flex;
+    flex-flow: column-reverse;
 
     @include media-query($on-desktop) {
       border-radius: 8px;
@@ -49,6 +52,17 @@
         }
       }
     }
+  }
+
+  .loader {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #loader {
+    max-height: 8em;
   }
 
   #recordBtn {

@@ -1,17 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import mic from "../../assets/mic.svg";
 
-function Host() {
+function Host(props) {
   let [btnDisabled, setBtnDisabled] = useState(true);
   let [mediaRecorder, setMediaRecorder] = useState({
     recorder: null,
   });
   let chunks = useRef([]);
 
-  let [url, setURL] = useState();
-
-  useEffect(() => {
+  useEffect(async () => {
     const ws = new WebSocket("ws://localhost:8001");
+
+    ws.onopen = () => {
+      // Create room
+      ws.send(JSON.stringify({ type: "create_room", id: props.roomId }));
+    };
+
+    ws.onmessage = (message) => {
+      console.log("Socket: ", JSON.parse(message.data));
+    };
 
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -32,24 +39,17 @@ function Host() {
         recorder.addEventListener("stop", async () => {
           console.log("stop event");
 
-          //TODO: Send audio to websocket
-          // let audio = await new Response(chunks.current[0]).text();
           const reader = new FileReader();
           reader.onload = () => {
-            console.log(reader.result);
             let event = {
               type: "recording",
               audio: reader.result.split("base64,")[1],
+              time: new Date().toUTCString(),
+              id: props.roomId,
             };
             ws.send(JSON.stringify(event));
           };
           reader.readAsDataURL(chunks.current[0]);
-
-          console.log(audio);
-          // let event = { type: "recording", audio: btoa(chunks.current[0]) };
-          // ws.send(JSON.stringify(event));
-
-          setURL(URL.createObjectURL(chunks.current[0]));
 
           chunks.current = [];
         });
@@ -82,7 +82,6 @@ function Host() {
         >
           <img src={mic} alt="Record" />
         </button>
-        <audio controls src={url}></audio>
       </div>
     </>
   );
