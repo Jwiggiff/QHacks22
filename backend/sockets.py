@@ -42,19 +42,22 @@ async def join(websocket, join_key):
 
 async def handler(websocket, path):
     while True:
-        message = await websocket.recv()
-        event = json.loads(message)
-        # print(message)
-        if event['type'] == 'recording':
-            print("recording received")
-            text = transcribe(event['audio'])
-            connected = JOIN[event['id']]
-            for connection in connected:
-                await connection.send(json.dumps({"type": "transcription", "message": text, "time": event['time']}))
-        elif event['type'] == 'join':
-            await join(websocket, event['id'])
-        else:
-            await start(websocket, event['id'])
+        try: 
+            message = await websocket.recv()
+            event = json.loads(message)
+            # print(message)
+            if event['type'] == 'recording':
+                print("recording received")
+                text = transcribe(event['audio'])
+                connected = JOIN[event['id']]
+                for connection in connected:
+                    await connection.send(json.dumps({"type": "transcription", "message": text, "time": event['time']}))
+            elif event['type'] == 'join':
+                await join(websocket, event['id'])
+            else:
+                await start(websocket, event['id'])
+        except:
+            print("Connection closed")
 
 async def main():
     async with websockets.serve(handler, "", 8001):
