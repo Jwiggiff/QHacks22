@@ -5,13 +5,24 @@ import os
 from dotenv import load_dotenv
 load_dotenv() 
 
-
 def write_file(audio):
+    """
+    This function writes the audio to a new file.
+    Parameters: audio - raw audio data from the user on JavaScript
+    Return: None
+    """
+
     f = open("test.wav", "wb")
+    # write raw audio data to file
     f.write(base64.b64decode(audio))
     f.close()
 
 def read_file(filename, chunk_size=5242880):
+    """
+    This function reads the audio to a fom the old file.
+    Parameters: filename - a string representing the number of the file, chunk_size - an integer representing the chunks in our file
+    Return: None, but data is yielded
+    """
     with open(filename, 'rb') as _file:
         while True:
             data = _file.read(chunk_size)
@@ -20,6 +31,13 @@ def read_file(filename, chunk_size=5242880):
             yield data
 
 def transcribe(audio):
+    """
+    This function transcribes the raw audio file.
+    Parameters: audio - raw audio data from the user on JavaScript
+    Return: None, but data is yielded
+    """
+
+    # writes the raw audio file
     write_file(audio)
 
     #upload file
@@ -34,7 +52,6 @@ def transcribe(audio):
         "authorization": os.getenv('API_KEY'),
         "content-type": "application/json"
     }
-    # print(myJson)
     response = requests.post(endpoint, json=myJson, headers=headers)
     print(response.json()['id'])
 
@@ -53,12 +70,4 @@ def transcribe(audio):
         elif(status == 'error'):
             print(response.json())
             break
-
     return response.json()['text']
-
-# calls the send_recieve function
-# asyncio.get_event_loop().run_until_complete(send_receive())
-# currently; websockets allow continuous connection between myself and the server
-# what we want: websocket that connects between the front and the back-end; ensure that you can pick up audio (from English to other languages)
-# https://websockets.readthedocs.io/en/stable/
-# we only want a server 
