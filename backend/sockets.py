@@ -48,15 +48,17 @@ async def handler(websocket, path):
             # print(message)
             if event['type'] == 'recording':
                 print("recording received")
-                text = transcribe(event['audio'])
                 connected = JOIN[event['id']]
+                for connection in connected:
+                    await connection.send(json.dumps({"type": "loading"}))
+                text = transcribe(event['audio'])
                 for connection in connected:
                     await connection.send(json.dumps({"type": "transcription", "message": text, "time": event['time']}))
             elif event['type'] == 'join':
                 await join(websocket, event['id'])
             else:
                 await start(websocket, event['id'])
-        except:
+        except websockets.exceptions.ConnectionClosedOK:
             print("Connection closed")
             break
 
