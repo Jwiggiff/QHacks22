@@ -9,6 +9,8 @@ Iris is a project that allows someone to create a room and allows others to join
 
 ### Backend:
 - [Python](https://www.python.org/)
+- [AssemblyAI](https://www.assemblyai.com/)
+- [Google Translate API](https://cloud.google.com/translate)
 - [Websockets](https://websockets.readthedocs.io/en/stable/#)
 
 
