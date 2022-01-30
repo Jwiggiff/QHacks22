@@ -58,6 +58,7 @@ async def handler(websocket, path):
                 await start(websocket, event['id'])
         except:
             print("Connection closed")
+            break
 
 async def main():
     async with websockets.serve(handler, "", 8001):
