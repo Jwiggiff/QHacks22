@@ -1,4 +1,5 @@
 # Iris - Breaking Language Barriers
+![alt text](https://github.com/Jwiggiff/QHacks22/blob/main/Logo/iris%20(2).png)
 Iris is a project that allows someone to create a room and allows others to join said room. The host can then record themselves speaking and a transcript translated into each user's language of choice will be sent to their devices in realtime. This was originally designed to be used in a classroom or lecture setting where the instructor does not speak the same language as the students, however it can also be applied to other settings such as livestreams, for students on exchange, tourists travelling abroad, etc. This was created during QHacks 2022.
 
 ### Frontend:
