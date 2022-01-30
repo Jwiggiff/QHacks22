@@ -65,7 +65,7 @@ def transcribe(audio):
         status = response.json()['status']
         print(status)
         if(status == 'completed'):
-            print(response.json()['text'])
+            # print(response.json()['text'])
             break
         elif(status == 'error'):
             print(response.json())

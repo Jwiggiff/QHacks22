@@ -3,6 +3,7 @@ import websockets
 import json
 import secrets
 from transcribe_text import transcribe
+from translate import translate
 
 # global variable defining the join dictionary
 JOIN = {}
@@ -14,7 +15,7 @@ async def start(websocket, join_key):
     Return: None
     """
     # this stores the websocket inside a new dictionary
-    connected = {websocket}
+    connected = [{"socket": websocket, "lang": "en"}]
     JOIN[join_key] = connected
     
     # stores join key in a dictionary called event, deletes when exception is raised.
@@ -27,7 +28,7 @@ async def start(websocket, join_key):
         del JOIN[join_key]
 
 
-async def join(websocket, join_key):
+async def join(websocket, join_key, lang):
     """
     This function handles a connection from consecutive audio files
     Parameters: websocket - an object representing the websocket, join_key - a string representing the room ID
@@ -40,7 +41,7 @@ async def join(websocket, join_key):
         return
     # adds websocket to the global dictionary, removes if false
     try:
-        connected.add(websocket)
+        connected.append({"socket": websocket, "lang": lang})
     except:
         connected.remove(websocket)
 
@@ -61,13 +62,19 @@ async def handler(websocket):
                 print("recording received")
                 connected = JOIN[event['id']]
                 for connection in connected:
-                    await connection.send(json.dumps({"type": "loading"}))
+                    await connection['socket'].send(json.dumps({"type": "loading"}))
                 text = transcribe(event['audio'])
+                print(text)
                 for connection in connected:
-                    await connection.send(json.dumps({"type": "transcription", "message": text, "time": event['time']}))
+                    print(connection)
+                    translated_text = translate(text, connection['lang'])
+                    print(translated_text)
+                    await connection['socket'].send(json.dumps({"type": "transcription", "message": translated_text, "time": event['time']}))
             elif event['type'] == 'join':
-                await join(websocket, event['id'])
+                print(message)
+                await join(websocket, event['id'], event['lang'])
             else:
+                print(message)
                 await start(websocket, event['id'])
         except websockets.exceptions.ConnectionClosedOK:
             print("Connection closed")

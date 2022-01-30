@@ -10,10 +10,7 @@ function RoomHeader(props) {
       </Link>
       <p>
         {" "}
-        <CopyButton
-          text={window.location.host + `/rooms/${props.roomId}`}
-        />{" "}
-        Room ID: {props.roomId}
+        <CopyButton text={props.roomId} /> Room ID: {props.roomId}
       </p>
     </header>
   );

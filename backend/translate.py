@@ -11,7 +11,7 @@ def translate(text, lang):
     )
 
     # get translated text
-    for translation in response.translations:
-        print(translation.translated_text)
+    # for translation in response.translations:
+    #     print(translation.translated_text)
 
-    return response.translations.translated_text
+    return response.translations[0].translated_text

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
+import langs from "../assets/langs.json";
 
 function RoomForm() {
   let navigate = useNavigate();
@@ -8,7 +9,7 @@ function RoomForm() {
     e.preventDefault();
 
     // Generate random room code
-    let roomCode = uuidv4();
+    let roomCode = nanoid();
 
     // Navigate to new room
     navigate(`/room/${roomCode}?host`);
@@ -16,10 +17,12 @@ function RoomForm() {
 
   function joinRoom(e) {
     e.preventDefault();
-    let roomId = new FormData(e.target).get("code");
+    let formData = new FormData(e.target);
+    let roomId = formData.get("code");
+    let lang = formData.get("lang");
 
     // Navigate to room
-    navigate(`/room/${roomId}`);
+    navigate(`/room/${roomId}?lang=${lang}`);
   }
 
   return (
@@ -30,9 +33,13 @@ function RoomForm() {
       <div className="seperator">Or</div>
       <form onSubmit={joinRoom} id="joinForm">
         <input type="text" name="code" placeholder="Room Code" />
-        {/* <select name="lang">
-          <option value=""></option>
-        </select> */}
+        <select name="lang">
+          {langs.map((lang) => (
+            <option key={lang.language_code} value={lang.language_code}>
+              {lang.display_name}
+            </option>
+          ))}
+        </select>
         <button>Join Room</button>
       </form>
     </div>

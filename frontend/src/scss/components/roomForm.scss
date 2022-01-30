@@ -5,19 +5,20 @@
   flex-flow: column;
   justify-content: center;
 
-  input {
+  input,
+  select {
     display: block;
     margin: auto;
     margin-bottom: 1rem;
     outline: none;
     background: none;
     border-radius: 8px;
-    border: 2px solid $accent;
+    border: 4px solid $accent;
     padding: 0.5em 0.75em;
     font-size: 1.5em;
 
     &:focus-visible {
-      border: 2px solid $primary;
+      border: 4px solid $primary;
     }
   }
 

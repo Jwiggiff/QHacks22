@@ -15,7 +15,10 @@ function Room() {
       {host ? (
         <Host roomId={params.roomId} />
       ) : (
-        <Transcript roomId={params.roomId} />
+        <Transcript
+          lang={searchParams.has("lang") ? searchParams.get("lang") : "en"}
+          roomId={params.roomId}
+        />
       )}
     </div>
   );

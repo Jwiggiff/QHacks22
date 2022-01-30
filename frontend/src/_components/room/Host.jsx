@@ -13,7 +13,7 @@ function Host(props) {
 
     ws.onopen = () => {
       // Create room
-      ws.send(JSON.stringify({ type: "create_room", id: props.roomId }));
+      ws.send(JSON.stringify({ type: "create", id: props.roomId }));
     };
 
     ws.onmessage = (message) => {

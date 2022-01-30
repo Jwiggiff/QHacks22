@@ -11,7 +11,9 @@ function Transcript(props) {
 
     ws.onopen = () => {
       // Join room
-      ws.send(JSON.stringify({ type: "join_room", id: props.roomId }));
+      ws.send(
+        JSON.stringify({ type: "join", id: props.roomId, lang: props.lang })
+      );
     };
 
     ws.onmessage = (message) => {
