@@ -5,13 +5,14 @@ import secrets
 from transcribe_text import transcribe
 
 JOIN = {}
-async def start(websocket):
+
+async def start(websocket, join_key):
     """
     Handles a connection from the initial audio file.
  
     """
     connected = {websocket}
-    join_key = secrets.token_urlsafe(12)
+    # join_key = secrets.token_urlsafe(12)
     JOIN[join_key] = connected
     try:
         # Send the secret access tokens to the browser of the first player,
@@ -20,7 +21,7 @@ async def start(websocket):
                 "type": "init",
                 "join": join_key,}
         await websocket.send(json.dumps(event))
-    finally:
+    except:
         del JOIN[join_key]
 
 
@@ -38,20 +39,22 @@ async def join(websocket, join_key):
     except:
         connected.remove(websocket)
 
+
 async def handler(websocket, path):
     while True:
         message = await websocket.recv()
         event = json.loads(message)
-        assert event["type"] == 'init'
         # print(message)
-        if message['type'] == 'recording':
+        if event['type'] == 'recording':
             print("recording received")
-            text = transcribe(message['audio'])
-            await websocket.send(json.dumps({"type": "transcription", "message": text}))
-        elif message['type'] == 'join':
-            await join(websocket, message['id'])
+            text = transcribe(event['audio'])
+            connected = JOIN[event['id']]
+            for connection in connected:
+                await connection.send(json.dumps({"type": "transcription", "message": text, "time": event['time']}))
+        elif event['type'] == 'join':
+            await join(websocket, event['id'])
         else:
-            await start(websocket)
+            await start(websocket, event['id'])
 
 async def main():
     async with websockets.serve(handler, "", 8001):
